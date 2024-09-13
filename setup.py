@@ -12,13 +12,13 @@ setup(
     name='django-upload-validator',
     version='1.1.6',
     packages=['upload_validator'],
-    description='A simple Django file type validator using python-magic',
+    description='A simple Django file type validator using puremagic',
     long_description=README,
     author='Naeem Ilyas',
     author_email='naeem-ilyas@live.com',
     url='https://github.com/naeem91/django-upload-validator',
     license='MIT',
     install_requires=[
-        'python-magic'
+        'puremagic'
     ]
 )

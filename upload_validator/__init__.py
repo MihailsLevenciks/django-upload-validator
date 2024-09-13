@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
-""" File validator using python-magic """
+""" File validator using puremagic """
 
 import os
 
-import magic
+import puremagic
 
 from django.utils.translation import gettext_lazy as _
 from django.utils.deconstruct import deconstructible
@@ -44,7 +44,13 @@ class FileTypeValidator(object):
         self.allowed_exts = allowed_extensions
 
     def __call__(self, fileobj):
-        detected_type = magic.from_buffer(fileobj.read(READ_SIZE), mime=True)
+        detected_type = puremagic.magic_stream(fileobj)
+
+        if detected_type and len(detected_type) > 0:
+            detected_type = detected_type[0].mime_type
+        else:
+            detected_type = ''
+
         root, extension = os.path.splitext(fileobj.name.lower())
 
         # seek back to start so a valid file could be read
@@ -110,7 +116,12 @@ class FileTypeValidator(object):
         excel_strings = ['Microsoft Excel', 'Microsoft Office Excel', 'Microsoft Macintosh Excel']
         office_strings = ['Microsoft OOXML']
 
-        file_type_details = magic.from_buffer(fileobj.read(READ_SIZE))
+        file_type_details = puremagic.magic_stream(fileobj)
+
+        if file_type_details and len(file_type_details) > 0:
+            file_type_details = file_type_details[0].name
+        else:
+            file_type_details = ''
 
         fileobj.seek(0)
 
